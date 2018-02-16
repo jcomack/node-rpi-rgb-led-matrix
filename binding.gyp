@@ -15,7 +15,6 @@
 				"external/matrix/lib/framebuffer.cc",
 				"external/matrix/lib/gpio.cc",
 				"external/matrix/lib/graphics.cc",
-				"external/matrix/lib/hardware-mappings.c",
 				"external/matrix/lib/led-matrix.cc",
 				"external/matrix/lib/multiplex-transformers.cc",
 				"external/matrix/lib/options-initialize.cc",
