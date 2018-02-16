@@ -16,9 +16,9 @@
 				"external/matrix/lib/gpio.cc",
 				"external/matrix/lib/graphics.cc",
 				"external/matrix/lib/led-matrix.cc",
-				"external/matrix/lib/multiplex-transformers.cc"
-				"external/matrix/lib/options-initialize.cc"
-				"external/matrix/lib/thread.cc"
+				"external/matrix/lib/multiplex-transformers.cc",
+				"external/matrix/lib/options-initialize.cc",
+				"external/matrix/lib/thread.cc",
 				"external/matrix/lib/transformer.cc"
             ],
 			"libraries": ["-lrt", "-lm", "-lpthread"],
