@@ -133,59 +133,59 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
 		//Set options props from passed object.
 		 v8::Object object = args[0]->ToObject();
 
-		 if (object->HasOwnProperty(Nan::New("rows").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("rows").ToLocalChecked())) {
 		  options.rows = object->Get(Nan::New("rows").ToLocalChecked());
 		 }
 
-		 if (object->HasOwnProperty(Nan::New("cols").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("cols").ToLocalChecked())) {
     options.cols = object->Get(Nan::New("cols").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("chain_length").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("chain_length").ToLocalChecked())) {
     options.chain_length = object->Get(Nan::New("chain_length").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("parallel").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("parallel").ToLocalChecked())) {
     options.parallel = object->Get(Nan::New("parallel").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("pwm_bits").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("pwm_bits").ToLocalChecked())) {
     options.pwm_bits = object->Get(Nan::New("pwm_bits").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("pwm_lsb_nanoseconds").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("pwm_lsb_nanoseconds").ToLocalChecked())) {
     options.pwm_lsb_nanoseconds = object->Get(Nan::New("pwm_lsb_nanoseconds").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("brightness").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("brightness").ToLocalChecked())) {
     options.brightness = object->Get(Nan::New("brightness").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("scan_mode").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("scan_mode").ToLocalChecked())) {
     options.scan_mode = object->Get(Nan::New("scan_mode").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("row_address_type").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("row_address_type").ToLocalChecked())) {
     options.row_address_type = object->Get(Nan::New("row_address_type").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("multiplexing").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("multiplexing").ToLocalChecked())) {
     options.multiplexing = object->Get(Nan::New("multiplexing").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("disable_hardware_pulsing").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("disable_hardware_pulsing").ToLocalChecked())) {
     options.disable_hardware_pulsing = object->Get(Nan::New("disable_hardware_pulsing").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("show_refresh_rate").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("show_refresh_rate").ToLocalChecked())) {
     options.show_refresh_rate = object->Get(Nan::New("show_refresh_rate").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("inverse_colors").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("inverse_colors").ToLocalChecked())) {
     options.inverse_colors = object->Get(Nan::New("inverse_colors").ToLocalChecked());
    }
 
-		 if (object->HasOwnProperty(Nan::New("led_rgb_sequence").ToLocalChecked())) {
+		 if (object.HasOwnProperty(Nan::New("led_rgb_sequence").ToLocalChecked())) {
     options.led_rgb_sequence = object->Get(Nan::New("led_rgb_sequence").ToLocalChecked());
    }
 	}
