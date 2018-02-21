@@ -22,9 +22,9 @@ using rgb_matrix::GPIO;
 
 Nan::Persistent<v8::Function> LedMatrix::constructor;
 
-LedMatrix::LedMatrix(int rows, int chained_displays, int parallel_displays) {
+LedMatrix::LedMatrix( RGBMatrix::Options options ) {
 	assert(io.Init());
-	matrix = new RGBMatrix(&io, rows, chained_displays, parallel_displays);	
+	matrix = new RGBMatrix(&io, options);
 	matrix->set_luminance_correct(true);
 	image = NULL;
 }
@@ -57,6 +57,7 @@ void LedMatrix::Init(v8::Local<v8::Object> exports) {
 	exports->Set(Nan::New("LedMatrix").ToLocalChecked(), tpl->GetFunction());
 }
 
+// Simple getters.
 int LedMatrix::GetWidth() {
 	return matrix->width();
 }
@@ -126,29 +127,79 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
 		Nan::ThrowError("LedMatrix::must be called as a constructor with 'new' keyword");
 	}
 
-	// grab parameters
-	int rows = 32;
-	int chained = 1;
-	int parallel = 1;
+ RGBMatrix::Options options = RGBMatrix::Options();
 
-	if(args.Length() > 0 && args[0]->IsNumber()) {
-		rows = args[0]->ToInteger()->Value();
+	if(args.Length() > 0 && args[0]->IsObject()) {
+		//Set options props from passed object.
+		 v8::Object object = args[0]->ToObject();
+
+		 if (object->HasOwnProperty(Nan::New("rows").ToLocalChecked())) {
+		  options.rows = object->Get(Nan::New("rows").ToLocalChecked());
+		 }
+
+		 if (object->HasOwnProperty(Nan::New("cols").ToLocalChecked())) {
+    options.cols = object->Get(Nan::New("cols").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("chain_length").ToLocalChecked())) {
+    options.chain_length = object->Get(Nan::New("chain_length").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("parallel").ToLocalChecked())) {
+    options.parallel = object->Get(Nan::New("parallel").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("pwm_bits").ToLocalChecked())) {
+    options.pwm_bits = object->Get(Nan::New("pwm_bits").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("pwm_lsb_nanoseconds").ToLocalChecked())) {
+    options.pwm_lsb_nanoseconds = object->Get(Nan::New("pwm_lsb_nanoseconds").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("brightness").ToLocalChecked())) {
+    options.brightness = object->Get(Nan::New("brightness").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("scan_mode").ToLocalChecked())) {
+    options.scan_mode = object->Get(Nan::New("scan_mode").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("row_address_type").ToLocalChecked())) {
+    options.row_address_type = object->Get(Nan::New("row_address_type").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("multiplexing").ToLocalChecked())) {
+    options.multiplexing = object->Get(Nan::New("multiplexing").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("disable_hardware_pulsing").ToLocalChecked())) {
+    options.disable_hardware_pulsing = object->Get(Nan::New("disable_hardware_pulsing").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("show_refresh_rate").ToLocalChecked())) {
+    options.show_refresh_rate = object->Get(Nan::New("show_refresh_rate").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("inverse_colors").ToLocalChecked())) {
+    options.inverse_colors = object->Get(Nan::New("inverse_colors").ToLocalChecked());
+   }
+
+		 if (object->HasOwnProperty(Nan::New("led_rgb_sequence").ToLocalChecked())) {
+    options.led_rgb_sequence = object->Get(Nan::New("led_rgb_sequence").ToLocalChecked());
+   }
 	}
-	if(args.Length() > 1 && args[1]->IsNumber()) {
-		chained = args[1]->ToInteger()->Value();
-	}
-	if(args.Length() > 2 && args[2]->IsNumber()) {
-		parallel = args[2]->ToInteger()->Value();
-	}
+
 
 	// make the matrix
-	LedMatrix* matrix = new LedMatrix(rows, chained, parallel);
+	LedMatrix* matrix = new LedMatrix(options);
 	matrix->Wrap(args.This());
 
 	// return this object
 	args.GetReturnValue().Set(args.This());
 }
 
+// Node bindings
 void LedMatrix::GetWidth(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 	LedMatrix* matrix = ObjectWrap::Unwrap<LedMatrix>(args.Holder());
 	args.GetReturnValue().Set(Nan::New<v8::Number>(matrix->GetWidth()));
