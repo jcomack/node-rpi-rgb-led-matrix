@@ -133,7 +133,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
 		//Set options props from passed object.
 		 v8::Local<Object> object = args[0]->ToObject();
 
-		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("rows").toLocalChecked() ) ) {
+		 if (Nan::HasOwnProperty(object, Nan::New("rows").toLocalChecked() ) ) {
 		  options.rows = object->Get(Nan::New("rows").ToLocalChecked());
 		 }
 
