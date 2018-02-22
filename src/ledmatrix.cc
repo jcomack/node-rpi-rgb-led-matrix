@@ -15,9 +15,6 @@
 #include <led-matrix.h>
 #include <ledmatrix.h>
 
-#include <string>
-#include <iostream>
-
 using namespace v8;
 using namespace node;
 using namespace rgb_matrix;
@@ -189,9 +186,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
    }
 
 		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
-    options.led_rgb_sequence = *Nan::Utf8String(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked()));
-
-    cout << options.led_rgb_sequence;
+    options.led_rgb_sequence = *Nan::NanAsciiString(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked()));
    }
 	}
 
