@@ -185,9 +185,11 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
     options.inverse_colors = object->Get(Nan::New("inverse_colors").ToLocalChecked())->BooleanValue();
    }
 
-		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
-    options.led_rgb_sequence = *Nan::CString(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked()));
-   }
+//		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
+//    options.led_rgb_sequence = *Nan::Utf8String(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked()));
+//   }
+
+   options.led_rgb_sequence = "RGB";
 	}
 
 
