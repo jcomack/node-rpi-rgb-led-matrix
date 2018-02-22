@@ -134,7 +134,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
 		 v8::Local<Object> object = args[0]->ToObject();
 
 		 if ( Nan::HasOwnProperty(object, Nan::New<v8::String>("rows").ToLocalChecked() ).IsJust() ) {
-		  options.rows = object->Get(Nan::New("rows").ToLocalChecked());
+		  options.rows = object->Get(Nan::New("rows").ToLocalChecked())->ToInteger();
 		 }
 
 		 if (object->HasOwnProperty(Nan::New("cols").ToLocalChecked())) {
