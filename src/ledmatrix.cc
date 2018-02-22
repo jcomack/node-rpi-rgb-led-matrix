@@ -134,7 +134,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
 		 v8::Local<Object> object = args[0]->ToObject();
 
 		 if ( Nan::HasOwnProperty(object, Nan::New<v8::String>("rows").ToLocalChecked() ).IsJust() ) {
-		  options.rows = object->Get(Nan::New("rows").ToLocalChecked())->ToInteger()->Value();
+		  options.rows = object->Get(Nan::New("rows").ToLocalChecked())->IntegerValue();
 		 }
 
 		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("cols").ToLocalChecked()).IsJust() ) {
@@ -186,7 +186,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
    }
 
 		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
-    options.led_rgb_sequence = object->Get(Nan::New("led_rgb_sequence").ToLocalChecked());
+    options.led_rgb_sequence = Nan::To<v8::String>(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked()));
    }
 	}
 
