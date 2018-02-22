@@ -15,6 +15,9 @@
 #include <led-matrix.h>
 #include <ledmatrix.h>
 
+#include <string>
+#include <iostream>
+
 using namespace v8;
 using namespace node;
 using namespace rgb_matrix;
