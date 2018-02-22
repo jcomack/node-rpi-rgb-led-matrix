@@ -178,15 +178,15 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
    }
 
 		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("show_refresh_rate").ToLocalChecked()).IsJust() ) {
-    options.show_refresh_rate = object->Get(Nan::New("show_refresh_rate").ToLocalChecked())->ToBoolean()->Value();
+    options.show_refresh_rate = object->Get(Nan::New("show_refresh_rate").ToLocalChecked())->BooleanValue();
    }
 
 		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("inverse_colors").ToLocalChecked()).IsJust() ) {
-    options.inverse_colors = object->Get(Nan::New("inverse_colors").ToLocalChecked())->ToBoolean()->Value();
+    options.inverse_colors = object->Get(Nan::New("inverse_colors").ToLocalChecked())->BooleanValue();
    }
 
 		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
-    options.led_rgb_sequence = object->Get(Nan::New("led_rgb_sequence").ToLocalChecked())->ToString()->Value();
+    options.led_rgb_sequence = object->Get(Nan::New("led_rgb_sequence").ToLocalChecked())->GetReturnValue();
    }
 	}
 
