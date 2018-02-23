@@ -214,9 +214,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
  options.led_rgb_sequence = "RGB";
 
 	if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
-			String::AsciiValue rgb(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked())->ToString());
-
-   options.led_rgb_sequence = rgb;
+			options.led_rgb_sequence = NanReturnValue(NanNew(*NanAsciiString(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked())->ToString())));
  	}
 	}
 
