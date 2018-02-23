@@ -218,7 +218,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
 
 			Nan::Utf8String rgb_val(rgb);
 
-			options.led_rgb_sequence rgb_val;
+			options.led_rgb_sequence = rgb_val;
  	}
 	}
 
