@@ -185,13 +185,16 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
     options.inverse_colors = object->Get(Nan::New("inverse_colors").ToLocalChecked())->BooleanValue();
    }
 
-//		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
-//    options.led_rgb_sequence = *Nan::Utf8String(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked()));
-//   }
-
+   // Default for RGB sequence
+   // TODO: Needs testing
    options.led_rgb_sequence = "RGB";
-	}
 
+		 if (Nan::HasOwnProperty(object, Nan::New<v8::String>("led_rgb_sequence").ToLocalChecked()).IsJust() ) {
+    String::AsciiValue rgb(object->Get(Nan::New("led_rgb_sequence").ToLocalChecked())->ToString());
+
+    options.led_rgb_sequence = rgb;
+   }
+	}
 
 	// make the matrix
 	LedMatrix* matrix = new LedMatrix(options);
@@ -204,27 +207,28 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args) {
 // Node bindings
 void LedMatrix::GetWidth(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 	LedMatrix* matrix = ObjectWrap::Unwrap<LedMatrix>(args.Holder());
+
 	args.GetReturnValue().Set(Nan::New<v8::Number>(matrix->GetWidth()));
 }
 
 void LedMatrix::GetHeight(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 	LedMatrix* matrix = ObjectWrap::Unwrap<LedMatrix>(args.Holder());
+
 	args.GetReturnValue().Set(Nan::New<v8::Number>(matrix->GetHeight()));
 }
 
 void LedMatrix::SetPixel(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 	LedMatrix* matrix = ObjectWrap::Unwrap<LedMatrix>(args.Holder());
 
-	if(args.Length() != 5 || !args[0]->IsNumber() || !args[1]->IsNumber() || !args[2]->IsNumber()
-	|| !args[3]->IsNumber() || !args[4]->IsNumber()) {
+	if(args.Length() != 5 || !args[0]->IsNumber() || !args[1]->IsNumber() || !args[2]->IsNumber()	|| !args[3]->IsNumber() || !args[4]->IsNumber()) {
 		Nan::ThrowTypeError("Wrong parameters! Expects 5 numbers");
   	}
 
-  	int x = args[0]->ToInteger()->Value();
-  	int y = args[1]->ToInteger()->Value();
-  	int r = args[2]->ToInteger()->Value();
-  	int g = args[3]->ToInteger()->Value();
-  	int b = args[4]->ToInteger()->Value();
+  	int x = args[0]->IntegerValue();
+  	int y = args[1]->IntegerValue();
+  	int r = args[2]->IntegerValue();
+  	int g = args[3]->IntegerValue();
+  	int b = args[4]->IntegerValue();
 
   	matrix->SetPixel(x, y, r, g, b);
 }
@@ -233,10 +237,11 @@ void LedMatrix::Clear(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 	LedMatrix* matrix = ObjectWrap::Unwrap<LedMatrix>(args.Holder());
 
 	if(args.Length() == 4 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsNumber() && args[3]->IsNumber()) {
-		int x = args[0]->ToInteger()->Value();
-	  	int y = args[1]->ToInteger()->Value();
-	  	int w = args[2]->ToInteger()->Value();
-	  	int h = args[3]->ToInteger()->Value();
+		  int x = args[0]->IntegerValue();
+	  	int y = args[1]->IntegerValue();
+	  	int w = args[2]->IntegerValue();
+	  	int h = args[3]->IntegerValue();
+
 	  	matrix->Clear(x, y, w, h);
 	} else {
 		matrix->Clear();
@@ -250,10 +255,11 @@ void LedMatrix::Fill(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 		Nan::ThrowTypeError("Wrong parameters! Expects 3 numbers");
 	}
 
-	int r = args[0]->ToInteger()->Value();
-  	int g = args[1]->ToInteger()->Value();
-  	int b = args[2]->ToInteger()->Value();
-  	matrix->Fill(r, g, b);
+	int r = args[0]->IntegerValue();
+ int g = args[1]->IntegerValue();
+ int b = args[2]->IntegerValue();
+
+ matrix->Fill(r, g, b);
 }
 
 void LedMatrix::SetImageBuffer(const Nan::FunctionCallbackInfo<v8::Value>& args) {
@@ -265,15 +271,18 @@ void LedMatrix::SetImageBuffer(const Nan::FunctionCallbackInfo<v8::Value>& args)
 
 	char* buf = Buffer::Data(args[0]->ToObject());
 	size_t bufl = Buffer::Length(args[0]->ToObject());
-	int width = args[1]->ToInteger()->Value();
-	int height = args[2]->ToInteger()->Value();
+
+	int width = args[1]->IntegerValue();
+	int height = args[2]->IntegerValue();
 
 	assert((int)bufl == width*height*3);
 
 	Image* img = new Image();
 	Pixel* pixels = (Pixel*) malloc(sizeof(Pixel)*width*height);
+
 	for(int i=0; i < width*height; i++) {
 		int j = i*3;
+
 		Pixel p;
 		p.SetR(buf[j]);
 		p.SetG(buf[j+1]);
@@ -294,60 +303,68 @@ void LedMatrix::Draw(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 
 	int startx = 0;
 	int starty = 0;
-	if(args.Length() > 0 && args[0]->IsNumber()) startx = args[0]->ToInteger()->Value();
-	if(args.Length() > 1 && args[1]->IsNumber()) starty = args[1]->ToInteger()->Value();
 
-	int width = matrix->GetWidth() - startx;
+	if(args.Length() > 0 && args[0]->IsNumber()) startx = args[0]->IntegerValue();
+	if(args.Length() > 1 && args[1]->IsNumber()) starty = args[1]->IntegerValue();
+
+	int width  = matrix->GetWidth() - startx;
 	int height = matrix->GetHeight() - starty;
+
 	int imgx = 0;
 	int imgy = 0;
+
 	bool looph = false;
 	bool loopv = false;
 
-	if(args.Length() > 2 && args[2]->IsNumber()) width = args[2]->ToInteger()->Value();
-	if(args.Length() > 3 && args[3]->IsNumber()) height = args[3]->ToInteger()->Value();
-	if(args.Length() > 4 && args[4]->IsNumber()) imgx = args[4]->ToInteger()->Value();
-	if(args.Length() > 5 && args[5]->IsNumber()) imgy = args[5]->ToInteger()->Value();
-	if(args.Length() > 6 && args[6]->IsBoolean()) looph = args[6]->ToBoolean()->Value();
-	if(args.Length() > 7 && args[7]->IsBoolean()) loopv = args[7]->ToBoolean()->Value();
+	if(args.Length() > 2 && args[2]->IsNumber()) width  = args[2]->IntegerValue();
+	if(args.Length() > 3 && args[3]->IsNumber()) height = args[3]->IntegerValue();
+	if(args.Length() > 4 && args[4]->IsNumber()) imgx   = args[4]->IntegerValue();
+	if(args.Length() > 5 && args[5]->IsNumber()) imgy   = args[5]->IntegerValue();
+	if(args.Length() > 6 && args[6]->IsBoolean()) looph = args[6]->BooleanValue();
+	if(args.Length() > 7 && args[7]->IsBoolean()) loopv = args[7]->BooleanValue();
 
-
-    matrix->Draw(startx, starty, width, height, imgx, imgy, looph, loopv);
+ matrix->Draw(startx, starty, width, height, imgx, imgy, looph, loopv);
 }
 
 void LedMatrix::Scroll(const Nan::FunctionCallbackInfo<v8::Value>& args) {
 	LedMatrix* matrix = ObjectWrap::Unwrap<LedMatrix>(args.This());
 
 	if(args.Length() == 0 || !args[0]->IsFunction()) {
-    	return Nan::ThrowTypeError("Callback is required and must be a Function");
-  	}
+  return Nan::ThrowTypeError("Callback is required and must be a Function");
+ }
 
 	int startx = 0;
 	int starty = 0;
-	if(args.Length() > 1 && args[1]->IsNumber()) startx = args[1]->ToInteger()->Value();
-	if(args.Length() > 2 && args[2]->IsNumber()) starty = args[2]->ToInteger()->Value();
 
-	int width = matrix->GetWidth() - startx;
+	if(args.Length() > 1 && args[1]->IsNumber()) startx = args[1]->IntegerValue();
+	if(args.Length() > 2 && args[2]->IsNumber()) starty = args[2]->IntegerValue();
+
+	int width  = matrix->GetWidth() - startx;
 	int height = matrix->GetHeight() - starty;
 	int scroll = SCROLL_TO_LEFT;
-	int speed = 1;
-	int loop = 0;
 
-	if(args.Length() > 3 && args[3]->IsNumber()) width = 	args[3]->ToInteger()->Value();
-	if(args.Length() > 4 && args[4]->IsNumber()) height = 	args[4]->ToInteger()->Value();
-	if(args.Length() > 5 && args[5]->IsNumber()) scroll = 	args[5]->ToInteger()->Value();
-	if(args.Length() > 6 && args[6]->IsNumber()) speed = 	args[6]->ToInteger()->Value();
-	if(args.Length() > 7 && args[7]->IsNumber()) loop = 	args[7]->ToInteger()->Value();
+	int speed  = 1;
+	int loop   = 0;
+
+	if(args.Length() > 3 && args[3]->IsNumber()) width  = args[3]->IntegerValue();
+	if(args.Length() > 4 && args[4]->IsNumber()) height = args[4]->IntegerValue();
+	if(args.Length() > 5 && args[5]->IsNumber()) scroll = args[5]->IntegerValue();
+	if(args.Length() > 6 && args[6]->IsNumber()) speed  = args[6]->IntegerValue();
+	if(args.Length() > 7 && args[7]->IsNumber()) loop   = args[7]->IntegerValue();
 
 	// convert to ms
 	speed = speed * 1000;
 
 	uvscroll* uv = new uvscroll();
-	uv->matrix = matrix;	uv->callback = new Nan::Callback(Local<Function>::Cast(args[0]));
-	uv->startx = startx;	uv->starty = starty;
-	uv->width = width;		uv->height = height;
-	uv->scroll = scroll;	uv->loop = loop;
-	uv->speed = speed;
+	uv->matrix  = matrix;
+	uv->callback = new Nan::Callback(Local<Function>::Cast(args[0]));
+	uv->startx  = startx;
+	uv->starty = starty;
+	uv->width   = width;
+	uv->height = height;
+	uv->scroll  = scroll;
+	uv->loop = loop;
+	uv->speed   = speed;
 
 	matrix->Ref();
 
